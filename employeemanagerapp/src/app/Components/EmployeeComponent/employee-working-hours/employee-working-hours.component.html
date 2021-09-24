@@ -1,0 +1,114 @@
+<div id="main-container" class="container-fluid">
+    <div id="main-row" class="row">
+        <div id="profile" class="col-xl-3 col-md-5 border-end">
+            <div class="card mt-4">
+                <div class="card-body row">
+                    <div class="col-4 col-md-6">
+                        <img src="{{ employee?.imageUrl }}" class="img-fluid rounded-circle w-60" alt="" />
+                    </div>
+                    <div class="col-8 col-md-6 card-title align-self-center mb-0">
+                        <h5 class="card-title">
+                            {{ employee?.firstName }} {{ employee?.lastName }}
+                        </h5>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="fa fa-envelope float-right"></i> {{ employee?.email }}
+                    </li>
+                    <li class="list-group-item">PIN: {{ employee?.pin }}</li>
+                    <li class="list-group-item">{{ employee?.role?.roleName }}</li>
+                </ul>
+            </div>
+            <div class="my-3">
+                <label for="dateFrom">From: </label>
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Date from</mat-label>
+                    <input matInput [matDatepicker]="picker2" (dateChange)="filterStartDate($event)" id="startDate" name="dateFrom" placeholder="Start Date" ngModel
+                        required>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="my-3">
+                <label for="dateFrom">To: </label>
+                <mat-form-field appearance="fill" class="w-100">
+                    <mat-label>Date to</mat-label>
+                    <input matInput [matDatepicker]="picker3" (dateChange)="filterEndDate($event)" id="endDate" name="dateTo" placeholder="End Date" ngModel
+                        required>
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-xl-9 col-md-7">
+            <h3 class="bg-primary text-white p-2 mt-4 mb-4 rounded">Working Hours</h3>
+            <div class="table-responsive">
+                <table id="userData" class="table table-bordered bg-white">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Day (Date)</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            <th scope="col">Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let hour of filterHours; let indexOfElement = index;">
+                            <td>{{indexOfElement + 1}}</td>
+                            <td>{{hour.dateFrom.toLocaleDateString("en-US", { weekday: 'long' })}}
+                                ({{hour.dateFrom.toLocaleDateString()}})</td>
+                            <td>{{hour.dateFrom.toLocaleString("en-US", { hour: 'numeric', minute: 'numeric', hour12:
+                                false })}}</td>
+                            <td>{{hour.dateTo.toLocaleString("en-US", { hour: 'numeric', minute: 'numeric', hour12:
+                                false })}}</td>
+                            <td>{{hour.hours}} h</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="fw-bold">{{totalHours}} h</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addHoursModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Add Hours</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #addForm="ngForm" (ngSubmit)="onAddHours(addForm)" autocomplete="off">
+                    <div class="mb-3">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Choose a date</mat-label>
+                            <input matInput [matDatepicker]="picker1" name="dateFrom" placeholder="Start Date" ngModel
+                                required>
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn-close-add-form" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button [disabled]="addForm.invalid" type="submit" data-bs-dismiss="modal"
+                            class="btn btn-primary">Save
+                            changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

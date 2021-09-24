@@ -1,0 +1,17 @@
+@media only screen and (min-width: 768px) {
+    #profile{
+        height: 100%;
+    }
+
+    #main-container {
+        height: 100%;
+    }
+
+    #main-row{
+        height: 100%;
+    }
+}
+
+::ng-deep .cdk-overlay-container{
+    z-index: 1200 !important;
+}

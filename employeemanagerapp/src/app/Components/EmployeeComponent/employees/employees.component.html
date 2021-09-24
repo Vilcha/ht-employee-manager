@@ -1,0 +1,219 @@
+<div id="main-container" class="container-fluid">
+  <div id="main-row" class="row">
+    <div id="utils" class="col-xxl-2 col-xl-3 bg-secondary">
+      <div class="row d-flex justify-content-center">
+        <div id="weather" class="col-lg-12 col-md-6 w-75">
+          <div class="p-2" [ngClass]="{'weatherNight' : !weatherData?.isDay, 'weatherDay' : weatherData?.isDay}">
+            <div class="weatherWidgetRow">
+              <i class="fa fa-3x mt-2"
+                [ngClass]="{'fa-moon-o moon' : !weatherData?.isDay, 'fa-sun-o sun' : weatherData?.isDay}"
+                aria-hidden="true"></i>
+            </div>
+            <div *ngIf="weatherData?.status === 'Clouds'" class="weatherWidgetRow cloudDiv">
+              <i class="fa fa-3x fa-cloud cloud" aria-hidden="true"></i>
+            </div>
+            <div *ngIf="weatherData?.status === 'Rain'" class="weatherWidgetRow cloudDiv">
+              <i class="fa fa-3x fa-cloud rain" aria-hidden="true"></i>
+              <div class="rainDiv d-flex justify-content-center">
+                <i class="fa fa-tint rainDrop" aria-hidden="true"></i>
+                <i class="fa fa-tint mt-2 rainDrop" aria-hidden="true"></i>
+                <i class="fa fa-tint mt-1 rainDrop" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div class="weatherWidgetRow h5 mt-2">{{weatherData?.status}}</div>
+            <div class="weatherWidgetRow h3 mt-2">{{weatherData?.temp_celcius}}°</div>
+            <div class="weatherWidgetRow fs-5">Feels Like: {{weatherData?.feels_like}}°</div>
+            <div class="weatherWidgetRow h3 mt-2">{{weatherData?.name}}</div>
+            <div class="weatherWidgetRow fs-5">Humidity: {{weatherData?.main.humidity}}%</div>
+          </div>
+        </div>
+        <div id="time" class="col-lg-12 col-md-6 w-75 my-2">
+          <div class="text-white text-center fw-bold">TIME</div>
+          <div class="text-white text-center fs-4 clock">{{time | date: 'h:mm a'}}</div>
+        </div>
+      </div>
+    </div>
+    <div id="list" class="col-xxl-10 col-xl-9">
+      <div class="row">
+        <div class="row mt-4 justify-content-between">
+          <div class="col-6 col-xxl-9">
+            <button class="btn btn-primary" (click)="onOpenModal(null, 'add')">Add Employee</button>
+          </div>
+          <div class="col-6 col-md-4 col-xxl-3">
+            <input class="form-control me-2" type="search" (ngModelChange)="searchEmployees(key.value)" #key="ngModel"
+              ngModel name="key" placeholder="Search employees..." aria-label="Search" />
+          </div>
+        </div>
+        <div *ngFor="let employee of employees" class="col-md-6 col-xl-4">
+          <div class="card">
+            <div class="card-body row">
+              <div class="col-6">
+                <img src="{{ employee?.imageUrl }}" class="img-fluid rounded-circle w-60" alt="" />
+              </div>
+              <div class="col-6 card-title align-self-center mb-0">
+                <h5 class="card-title">
+                  {{ employee?.firstName }} {{ employee?.lastName }}
+                </h5>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="fa fa-envelope float-right"></i> {{ employee?.email }}
+              </li>
+              <li class="list-group-item">PIN: {{ employee?.pin }}</li>
+              <li class="list-group-item">{{ employee?.role?.roleName }}</li>
+            </ul>
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div class=" btn-group btn-group-sm">
+                  <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                    data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                  <a (click)="onOpenModal(employee, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+                    data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                </div>
+                <div class=" btn-group btn-group-sm">
+                  <a (click)="onShowHours(employee.id)" class="btn btn-outline-secondary tooltips" data-placement="top"
+                    data-toggle="tooltip" data-original-title="Delete">Show hours</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="employees?.length == 0" class="col-12">
+          <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No employees in the database!</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddEmployee(addForm)" autocomplete="off">
+          <div class="mb-3">
+            <label for="firstName" class="col-form-label">First name:</label>
+            <input type="text" ngModel name="firstName" class="form-control" placeholder="First name" id="first-name"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="col-form-label">Last name:</label>
+            <input type="text" ngModel name="lastName" class="form-control" placeholder="Last name" id="last-name"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="col-form-label">E-Mail:</label>
+            <input type="text" ngModel name="email" class="form-control" placeholder="E-Mail" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="pin" class="col-form-label">PIN:</label>
+            <input type="text" ngModel name="pin" class="form-control" placeholder="PIN" id="pin" required
+              minlength="11" maxlength="11">
+          </div>
+          <div class="mb-3">
+            <label for="imageUrl" class="col-form-label">Image URL:</label>
+            <input type="text" ngModel name="imageUrl" class="form-control" placeholder="Image URL" id="imageUrl"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="role" class="col-form-label">Role:</label>
+            <select name="role" ngModel id="role" class="form-control" required>
+              <option disabled selected></option>
+              <option *ngFor="let role of roles" [ngValue]="role">{{role?.roleName}}</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="btn-close-add-form" class="btn btn-secondary"
+              data-bs-dismiss="modal">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" data-bs-dismiss="modal" class="btn btn-primary">Save
+              changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editEmployeeModal">Edit Employee {{editEmployee?.firstName}}
+          {{editEmployee?.lastName}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+          <input type="hidden" ngModel={{editEmployee?.id}} name="id" class="form-control" id="id">
+          <div class="mb-3">
+            <label for="firstName" class="col-form-label">First name:</label>
+            <input type="text" ngModel={{editEmployee?.firstName}} name="firstName" class="form-control"
+              placeholder="First name" id="first-name" required>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="col-form-label">Last name:</label>
+            <input type="text" ngModel={{editEmployee?.lastName}} name="lastName" class="form-control"
+              placeholder="Last name" id="last-name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="col-form-label">E-Mail:</label>
+            <input type="text" ngModel={{editEmployee?.email}} name="email" class="form-control" placeholder="E-Mail"
+              id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="pin" class="col-form-label">PIN:</label>
+            <input type="text" ngModel={{editEmployee?.pin}} name="pin" class="form-control" placeholder="PIN" id="pin"
+              required minlength="11" maxlength="11">
+          </div>
+          <div class="mb-3">
+            <label for="imageUrl" class="col-form-label">Image URL:</label>
+            <input type="text" ngModel={{editEmployee?.imageUrl}} name="imageUrl" class="form-control"
+              placeholder="Image URL" id="imageUrl" required>
+          </div>
+          <div class="mb-3">
+            <label for="role" class="col-form-label">Role:</label>
+            <select name="role" ngModel={{editEmployee?.role}} id="role" class="form-control" required>
+              <option *ngFor="let role of roles" [ngValue]="role">{{role?.roleName}}</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="btn-close-add-form" class="btn btn-secondary"
+              data-bs-dismiss="modal">Close</button>
+            <button [disabled]="updateForm.invalid" (click)="onUpdateEmployee(updateForm.value)" data-bs-dismiss="modal"
+              class="btn btn-primary">Save
+              changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteEmployeeModal">Delete Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete employee {{deleteEmployee?.firstName}} {{deleteEmployee?.lastName}}?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button (click)="onDeleteEmployee(deleteEmployee?.id)" data-bs-dismiss="modal" type="button"
+          class="btn btn-danger">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
