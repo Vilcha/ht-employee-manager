@@ -181,8 +181,8 @@
           </div>
           <div class="mb-3">
             <label for="role" class="col-form-label">Role:</label>
-            <select name="role" ngModel={{editEmployee?.role}} id="role" class="form-control" required>
-              <option *ngFor="let role of roles" [ngValue]="role">{{role?.roleName}}</option>
+            <select name="role" [(ngModel)]="selectedRoleId" id="role" class="form-control" required>
+              <option *ngFor="let role of roles" [ngValue]="role.id">{{role?.roleName}}</option>
             </select>
           </div>
           <div class="modal-footer">

@@ -18,9 +18,6 @@ public class Employee implements Serializable {
     private String email;
     @Column(updatable = false)
     private String password;
-    //@OneToOne
-    //@JoinColumn(name = "LoginId")
-    //private Login login;
     @ManyToOne
     @JoinColumn(name = "RoleId")
     private Role role;

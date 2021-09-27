@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Employee } from 'src/app/employee';
-import { EmployeeService } from 'src/app/employee.service';
+import { Employee } from 'src/app/Models/employee';
+import { EmployeeService } from 'src/app/Services/employee.service';
 import { Login } from 'src/app/Models/login';
 import { Router } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
       (response: Employee) => {
         if (response != null) {
           this.employeeService.loggedEmployee = response;     
-          console.log(this.employeeService.loggedEmployee);    
           localStorage.setItem('user', JSON.stringify(this.employeeService.loggedEmployee));
           if (this.employeeService.loggedEmployee.role.id == 1) {
             this.router.navigate(["/employees"]);            

@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Employee } from 'src/app/employee';
-import { EmployeeService } from 'src/app/employee.service';
+import { Employee } from 'src/app/Models/employee';
+import { EmployeeService } from 'src/app/Services/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Hours } from 'src/app/Models/hours';
@@ -125,8 +125,10 @@ export class EmployeeWorkingHoursComponent implements OnInit {
         });
         this.filterHours = this.hours;
         var dates = this.hours.map(function (x) { return x.dateFrom });
-        var minDate = dates.reduce(function (a, b) { return a < b ? a : b; });
-        var maxDate = dates.reduce(function (a, b) { return a > b ? a : b; });
+        if (dates.length > 0) {
+          var minDate = dates.reduce(function (a, b) { return a < b ? a : b; });
+          var maxDate = dates.reduce(function (a, b) { return a > b ? a : b; });          
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);

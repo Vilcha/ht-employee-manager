@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { EmployeeService } from './employee.service';
-import { RoleService } from './role.service';
+import { EmployeeService } from './Services/employee.service';
+import { RoleService } from './Services/role.service';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';

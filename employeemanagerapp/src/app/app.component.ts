@@ -2,10 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Employee } from './employee';
-import { EmployeeService } from './employee.service';
-import { Role } from './role';
-import { RoleService } from './role.service';
+import { Employee } from './Models/employee';
+import { EmployeeService } from './Services/employee.service';
+import { Role } from './Services/role';
+import { RoleService } from './Services/role.service';
 
 @Component({
   selector: 'app-root',

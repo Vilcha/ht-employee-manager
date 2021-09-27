@@ -2,10 +2,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Employee } from 'src/app/employee';
-import { EmployeeService } from 'src/app/employee.service';
-import { Role } from 'src/app/role';
-import { RoleService } from 'src/app/role.service';
+import { Employee } from 'src/app/Models/employee';
+import { EmployeeService } from 'src/app/Services/employee.service';
+import { Role } from 'src/app/Services/role';
+import { RoleService } from 'src/app/Services/role.service';
 
 @Component({
   selector: 'app-employees',
@@ -26,6 +26,7 @@ export class EmployeesComponent implements OnInit {
 
   public roles: Role[];
   public role: Role;
+  public selectedRoleId: number;
 
   constructor(private employeeService: EmployeeService, private roleService: RoleService, private router: Router) { }
 
@@ -79,9 +80,9 @@ export class EmployeesComponent implements OnInit {
   }
 
   public onUpdateEmployee(employee: Employee): void {
+    employee.role = this.roles.find(x => x.id == this.selectedRoleId);
     this.employeeService.updateEmployee(employee).subscribe(
       (response: Employee) => {
-        console.log(response);
         this.getEmployees();
       },
       (error: HttpErrorResponse) => {
@@ -139,6 +140,7 @@ export class EmployeesComponent implements OnInit {
     }
     if (mode === "edit") {
       this.editEmployee = employee;
+      this.selectedRoleId = employee.role.id;
       button.setAttribute("data-bs-target", "#editEmployeeModal");
     }
     if (mode === "delete") {
